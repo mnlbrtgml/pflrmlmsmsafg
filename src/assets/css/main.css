@@ -70,6 +70,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-[url('./src/assets/images/background.png')] bg-cover bg-center bg-no-repeat min-h-screen text-foreground;
+    @apply bg-[url('@/assets/images/background.png')] bg-cover bg-center bg-no-repeat min-h-screen text-foreground;
   }
 }
