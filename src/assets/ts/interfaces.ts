@@ -16,4 +16,9 @@ interface IResponse {
   message: string | null;
 }
 
-export type { IFirebaseConfig, IResponse };
+interface ISignInForm {
+  email: string;
+  password: string;
+}
+
+export type { IFirebaseConfig, IResponse, ISignInForm };

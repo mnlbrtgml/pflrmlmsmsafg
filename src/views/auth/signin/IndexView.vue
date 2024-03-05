@@ -1,46 +1,111 @@
 <template>
-  <section class="h-screen grid place-items-center">
-    <form v-on:submit.prevent="" class="w-96 p-8 grid gap-2">
-      <img src="@/assets/images/urs-logo.png" alt="URS Logo" class="h-20 mx-auto" />
+  <section class="h-screen grid grid-cols-2">
+    <div class="flex items-center justify-end">
+      <div class="w-[30rem]">
+        <img src="@/assets/images/urs-logo.png" alt="URS Logo" class="h-20 mx-auto" />
 
-      <div class="text-center">
-        <p class="text-xs">
-          Proposed Features for <br />
-          Linear Regression Machine Learning Model of a
-        </p>
-        <h3 class="text-primary text-xl font-bold uppercase">Smart Monitoring System</h3>
-        <h4 class="text-primary font-semibold uppercase">for Ayungin Fish Growth</h4>
+        <div class="text-center">
+          <p class="text-xl font-medium">
+            Proposed Features for <br />
+            Linear Regression Machine Learning Model of a
+          </p>
+          <h3 class="text-primary text-6xl font-bold uppercase">Smart Monitoring System</h3>
+          <h4 class="text-primary text-xl font-semibold uppercase">for Ayungin Fish Growth</h4>
+        </div>
       </div>
+    </div>
 
-      <p class="text-center font-medium">Sign in to continue</p>
+    <div class="grid place-items-center">
+      <form
+        @submit.prevent="handleFormSignIn"
+        class="border-neutral-300 bg-neutral-100 w-80 border rounded-lg p-8 grid gap-2"
+      >
+        <p class="text-xl text-center font-bold uppercase mb-4">Sign in to continue</p>
 
-      <div>
-        <Label for="email"> Email </Label>
-        <Input type="email" />
-      </div>
+        <div class="space-y-1">
+          <Label for="email"> Email </Label>
+          <Input v-model.trim="form.email" type="email" required />
+        </div>
 
-      <div>
-        <Label for="password"> Password </Label>
-        <Input type="password" />
-      </div>
+        <div class="space-y-1">
+          <Label for="password"> Password </Label>
+          <Input
+            v-model.trim="form.password"
+            :type="isShowPassword ? 'text' : 'password'"
+            required
+          />
+        </div>
 
-      <div class="flex items-center gap-1">
-        <Checkbox id="show-password" />
-        <Label for="show-password" class="text-xs"> Show password </Label>
-      </div>
+        <div class="flex items-center gap-1">
+          <Checkbox @update:checked="isShowPassword = !isShowPassword" id="show-password" />
+          <Label for="show-password" class="text-xs"> Show password </Label>
+        </div>
 
-      <Button type="submit" class="mt-8"> Sign in </Button>
-      <Button variant="link" class="w-min mx-auto" as-child>
-        <RouterLink :to="{ name: 'signup' }"> Register new account </RouterLink>
-      </Button>
-    </form>
+        <Button type="submit" class="mt-8"> Sign in </Button>
+        <Button @click="navigateToSignUp" variant="link" class="w-min mx-auto">
+          Register new account
+        </Button>
+      </form>
+    </div>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { RouterLink } from "vue-router";
+import type { ISignInForm, IResponse } from "@/assets/ts/interfaces";
+import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/toast/use-toast";
+import useSignIn from "@/firebase/auth/signin";
+
+const { toast } = useToast();
+const router = useRouter();
+const isShowPassword = ref<boolean>(false);
+const form = reactive<ISignInForm>({
+  email: "",
+  password: "",
+});
+
+function resetForm(): void {
+  form.email = "";
+  form.password = "";
+}
+
+async function handleFormSignIn(): Promise<void> {
+  if (form.email && form.password) {
+    const response: IResponse = await useSignIn(form.email, form.password);
+
+    if (response.data) {
+      await router.push({ name: "home" });
+
+      toast({
+        title: "Sign in successful!",
+        description: "Welcome back!",
+        duration: 1500,
+      });
+    } else {
+      toast({
+        title: "Sign in failed!",
+        description: "Invalid username and/or password!",
+        variant: "destructive",
+        duration: 1500,
+      });
+    }
+  } else {
+    toast({
+      title: "Sign in failed!",
+      description: "Please input your email and password!",
+      variant: "destructive",
+      duration: 1500,
+    });
+  }
+}
+
+async function navigateToSignUp(): Promise<void> {
+  resetForm();
+  await router.push({ name: "signup" });
+}
 </script>
