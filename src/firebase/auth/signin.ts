@@ -8,7 +8,7 @@ const response: IResponse = {
   message: "",
 };
 
-async function useSignIn(email: string, password: string): Promise<IResponse> {
+export default async function useSignIn(email: string, password: string): Promise<IResponse> {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
@@ -24,5 +24,3 @@ async function useSignIn(email: string, password: string): Promise<IResponse> {
 
   return response;
 }
-
-export default useSignIn;

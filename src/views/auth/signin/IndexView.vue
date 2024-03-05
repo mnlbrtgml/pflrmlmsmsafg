@@ -24,7 +24,7 @@
 
         <div class="space-y-1">
           <Label for="email"> Email </Label>
-          <Input v-model.trim="form.email" type="email" required />
+          <Input v-model.trim="form.email" type="email" id="email" required />
         </div>
 
         <div class="space-y-1">
@@ -32,6 +32,7 @@
           <Input
             v-model.trim="form.password"
             :type="isShowPassword ? 'text' : 'password'"
+            id="password"
             required
           />
         </div>

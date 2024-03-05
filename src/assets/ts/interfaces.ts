@@ -1,4 +1,5 @@
 import { type User } from "firebase/auth";
+import { Role } from "@/assets/ts/enums";
 
 interface IFirebaseConfig {
   apiKey: string;
@@ -21,4 +22,13 @@ interface ISignInForm {
   password: string;
 }
 
-export type { IFirebaseConfig, IResponse, ISignInForm };
+interface ISignUpForm {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  role: Role;
+  email: string;
+  password: string;
+}
+
+export type { IFirebaseConfig, IResponse, ISignInForm, ISignUpForm };

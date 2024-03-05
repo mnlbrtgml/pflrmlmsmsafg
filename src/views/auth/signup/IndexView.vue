@@ -1,3 +1,110 @@
 <template>
-  <h1 class="text-3xl font-bold underline">SignUp!</h1>
+  <section class="h-screen p-8 grid place-items-center">
+    <form
+      @submit.prevent=""
+      class="border-neutral-300 bg-neutral-100 min-w-[60%] max-w-[70rem] border rounded-lg p-8 grid gap-2"
+    >
+      <p class="text-xl text-center font-bold uppercase mb-4">Register new account</p>
+
+      <div class="grid grid-cols-3 gap-2">
+        <div class="space-y-1">
+          <Label for="first-name"> First name <span class="text-destructive">*</span> </Label>
+          <Input v-model.trim="form.firstName" id="first-name" type="text" required />
+        </div>
+
+        <div class="space-y-1">
+          <Label for="middle-name"> Middle name </Label>
+          <Input v-model.trim="form.middleName" id="middle-name" type="text" />
+        </div>
+
+        <div class="space-y-1">
+          <Label for="last-name"> Last name <span class="text-destructive">*</span> </Label>
+          <Input v-model.trim="form.lastName" id="last-name" type="text" required />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <div class="space-y-1">
+          <Label for="email"> Email <span class="text-destructive">*</span> </Label>
+          <Input v-model.trim="form.email" id="email" type="email" required />
+        </div>
+
+        <div class="space-y-1">
+          <Label for="password"> Password <span class="text-destructive">*</span> </Label>
+          <Input v-model.trim="form.password" id="password" type="password" required />
+        </div>
+
+        <div class="space-y-1">
+          <Label for="retype-password">
+            Retype password <span class="text-destructive">*</span>
+          </Label>
+          <Input
+            v-model.trim="passwords.retypePassword"
+            id="retype-password"
+            type="password"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="ml-auto mt-8 flex gap-2">
+        <Button @click="navigateToSignIn" type="button" variant="secondary">
+          I already have an account
+        </Button>
+        <Button type="submit"> Save and sign in </Button>
+      </div>
+    </form>
+  </section>
 </template>
+
+<script lang="ts" setup>
+import type { ISignUpForm, IResponse } from "@/assets/ts/interfaces";
+import { reactive } from "vue";
+import { useRouter } from "vue-router";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/toast/use-toast";
+import useSignUp from "@/firebase/auth/signup";
+import { Role } from "@/assets/ts/enums";
+
+const { toast } = useToast();
+const router = useRouter();
+const passwords = reactive({
+  password: "",
+  retypePassword: "",
+});
+const form = reactive<ISignUpForm>({
+  firstName: "",
+  middleName: "",
+  lastName: "",
+  role: Role.viewer,
+  email: "",
+  password: "",
+});
+
+async function handleFormSignUp(): Promise<void> {
+  const response: IResponse = await useSignUp(form);
+
+  if (response.data) {
+    await router.push({ name: "home" });
+
+    toast({
+      title: "Sign up successful!",
+      description: "Welcome to PFLRMLMSMSAFG!",
+      duration: 1500,
+    });
+  } else {
+    toast({
+      title: "Sign up failed!",
+      description: "Please use invalid credentials!",
+      variant: "destructive",
+      duration: 1500,
+    });
+  }
+}
+
+async function navigateToSignIn(): Promise<void> {
+  await router.push({ name: "signin" });
+}
+</script>

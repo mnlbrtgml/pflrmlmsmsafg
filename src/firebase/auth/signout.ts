@@ -8,7 +8,7 @@ const response: IResponse = {
   message: "",
 };
 
-async function useSignOut(): Promise<IResponse> {
+export default async function useSignOut(): Promise<IResponse> {
   try {
     await signOut(auth).then(() => {
       response.code = "auth/sign-out-successful";
@@ -21,5 +21,3 @@ async function useSignOut(): Promise<IResponse> {
 
   return response;
 }
-
-export default useSignOut;
