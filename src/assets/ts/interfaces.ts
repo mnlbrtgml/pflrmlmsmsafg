@@ -23,6 +23,7 @@ interface ISignInForm {
 }
 
 interface ISignUpForm {
+  id: string;
   firstName: string;
   middleName: string;
   lastName: string;

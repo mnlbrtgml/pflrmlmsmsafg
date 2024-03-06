@@ -49,6 +49,8 @@
       </form>
     </div>
   </section>
+
+  <LoadingSpinner v-if="isShowLoading" />
 </template>
 
 <script lang="ts" setup>
@@ -61,9 +63,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast/use-toast";
 import useSignIn from "@/firebase/auth/signin";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 const { toast } = useToast();
 const router = useRouter();
+const isShowLoading = ref<boolean>(false);
 const isShowPassword = ref<boolean>(false);
 const form = reactive<ISignInForm>({
   email: "",
@@ -76,10 +80,14 @@ function resetForm(): void {
 }
 
 async function handleFormSignIn(): Promise<void> {
+  isShowLoading.value = true;
+
   if (form.email && form.password) {
     const response: IResponse = await useSignIn(form.email, form.password);
 
     if (response.data) {
+      isShowLoading.value = false;
+
       await router.push({ name: "home" });
 
       toast({
@@ -88,6 +96,8 @@ async function handleFormSignIn(): Promise<void> {
         duration: 1500,
       });
     } else {
+      isShowLoading.value = false;
+
       toast({
         title: "Sign in failed!",
         description: "Invalid username and/or password!",
@@ -96,6 +106,8 @@ async function handleFormSignIn(): Promise<void> {
       });
     }
   } else {
+    isShowLoading.value = false;
+
     toast({
       title: "Sign in failed!",
       description: "Please input your email and password!",

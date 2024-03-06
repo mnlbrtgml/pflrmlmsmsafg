@@ -1,7 +1,7 @@
 <template>
   <section class="h-screen p-8 grid place-items-center">
     <form
-      @submit.prevent=""
+      @submit.prevent="handleFormSignUp"
       class="border-neutral-300 bg-neutral-100 min-w-[60%] max-w-[70rem] border rounded-lg p-8 grid gap-2"
     >
       <p class="text-xl text-center font-bold uppercase mb-4">Register new account</p>
@@ -31,7 +31,7 @@
 
         <div class="space-y-1">
           <Label for="password"> Password <span class="text-destructive">*</span> </Label>
-          <Input v-model.trim="form.password" id="password" type="password" required />
+          <Input v-model.trim="passwords.password" id="password" type="password" required />
         </div>
 
         <div class="space-y-1">
@@ -55,26 +55,31 @@
       </div>
     </form>
   </section>
+
+  <LoadingSpinner v-if="isShowLoading" />
 </template>
 
 <script lang="ts" setup>
 import type { ISignUpForm, IResponse } from "@/assets/ts/interfaces";
-import { reactive } from "vue";
+import { Role } from "@/assets/ts/enums";
+import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast/use-toast";
 import useSignUp from "@/firebase/auth/signup";
-import { Role } from "@/assets/ts/enums";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 const { toast } = useToast();
 const router = useRouter();
+const isShowLoading = ref<boolean>(false);
 const passwords = reactive({
   password: "",
   retypePassword: "",
 });
 const form = reactive<ISignUpForm>({
+  id: "",
   firstName: "",
   middleName: "",
   lastName: "",
@@ -84,9 +89,28 @@ const form = reactive<ISignUpForm>({
 });
 
 async function handleFormSignUp(): Promise<void> {
+  isShowLoading.value = true;
+
+  if (passwords.password !== passwords.retypePassword) {
+    isShowLoading.value = false;
+
+    toast({
+      title: "Sign up failed!",
+      description: "Passwords do not match!",
+      variant: "destructive",
+      duration: 1500,
+    });
+
+    return;
+  }
+
+  form.password = passwords.password;
+
   const response: IResponse = await useSignUp(form);
 
   if (response.data) {
+    isShowLoading.value = false;
+
     await router.push({ name: "home" });
 
     toast({
@@ -95,6 +119,8 @@ async function handleFormSignUp(): Promise<void> {
       duration: 1500,
     });
   } else {
+    isShowLoading.value = false;
+
     toast({
       title: "Sign up failed!",
       description: "Please use invalid credentials!",

@@ -10,7 +10,7 @@ const response: IResponse = {
 
 export default async function useCreateUser(form: ISignUpForm): Promise<IResponse> {
   try {
-    await setDoc(doc(db, "users"), {
+    await setDoc(doc(db, "users", form.id), {
       firstName: form.firstName,
       middleName: form.middleName,
       lastName: form.lastName,

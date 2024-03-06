@@ -14,6 +14,8 @@ export default async function useSignUp(form: ISignUpForm): Promise<IResponse> {
     const userCredential = await createUserWithEmailAndPassword(auth, form.email, form.password);
 
     if (userCredential) {
+      form.id = userCredential.user.uid;
+
       await useCreateUser(form).then(() => {
         response.data = userCredential.user;
         response.code = "auth/sign-up-successful";
