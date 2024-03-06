@@ -1,3 +1,4 @@
+import { Role } from "@/assets/ts/enums";
 import type { IResponse, ISignUpForm } from "@/assets/ts/interfaces";
 import { db } from "@/firebase/config";
 import { setDoc, doc, Timestamp } from "firebase/firestore";
@@ -16,7 +17,7 @@ export default async function useCreateUser(form: ISignUpForm): Promise<IRespons
       lastName: form.lastName,
       emailAddress: form.email,
       imagePath: null,
-      userRole: "admin",
+      userRole: Role.viewer,
       isActive: true,
       dateCreated: Timestamp.now(),
       dateModified: Timestamp.now(),
