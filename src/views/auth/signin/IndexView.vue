@@ -29,7 +29,7 @@
 
       <div class="space-y-1">
         <Label for="email"> Email </Label>
-        <Input v-model.trim="form.email" type="email" id="email" required />
+        <Input v-model.trim="form.email" type="email" id="email" required disabled />
       </div>
 
       <div class="space-y-1">
@@ -39,16 +39,17 @@
           :type="isShowPassword ? 'text' : 'password'"
           id="password"
           required
+          disabled
         />
       </div>
 
       <div class="flex items-center gap-1">
-        <Checkbox @update:checked="isShowPassword = !isShowPassword" id="show-password" />
+        <Checkbox @update:checked="isShowPassword = !isShowPassword" id="show-password" disabled />
         <Label for="show-password" class="text-xs"> Show password </Label>
       </div>
 
       <Button type="submit" class="mt-8"> Sign in </Button>
-      <Button @click="navigateToSignUp" variant="link" class="w-min mx-auto">
+      <Button @click="navigateToSignUp" variant="link" class="w-min mx-auto" disabled>
         Register new account
       </Button>
     </form>
@@ -88,7 +89,7 @@ async function handleFormSignIn(): Promise<void> {
 
   toast({
     title: "Server Error!",
-    description: "The website is currently on development!",
+    description: "The website is currently in development!",
     variant: "destructive",
     duration: 1500,
   });
@@ -132,14 +133,6 @@ async function handleFormSignIn(): Promise<void> {
 
 async function navigateToSignUp(): Promise<void> {
   resetForm();
-
-  toast({
-    title: "Server Error!",
-    description: "The website is currently on development!",
-    variant: "destructive",
-    duration: 1500,
-  });
-
-  // await router.push({ name: "signup" });
+  await router.push({ name: "signup" });
 }
 </script>

@@ -9,29 +9,35 @@
       <div class="grid grid-cols-3 gap-2">
         <div class="space-y-1">
           <Label for="first-name"> First name <span class="text-destructive">*</span> </Label>
-          <Input v-model.trim="form.firstName" id="first-name" type="text" required />
+          <Input v-model.trim="form.firstName" id="first-name" type="text" required disabled />
         </div>
 
         <div class="space-y-1">
           <Label for="middle-name"> Middle name </Label>
-          <Input v-model.trim="form.middleName" id="middle-name" type="text" />
+          <Input v-model.trim="form.middleName" id="middle-name" type="text" disabled />
         </div>
 
         <div class="space-y-1">
           <Label for="last-name"> Last name <span class="text-destructive">*</span> </Label>
-          <Input v-model.trim="form.lastName" id="last-name" type="text" required />
+          <Input v-model.trim="form.lastName" id="last-name" type="text" required disabled />
         </div>
       </div>
 
       <div class="grid grid-cols-3 gap-2">
         <div class="space-y-1">
           <Label for="email"> Email <span class="text-destructive">*</span> </Label>
-          <Input v-model.trim="form.email" id="email" type="email" required />
+          <Input v-model.trim="form.email" id="email" type="email" required disabled />
         </div>
 
         <div class="space-y-1">
           <Label for="password"> Password <span class="text-destructive">*</span> </Label>
-          <Input v-model.trim="passwords.password" id="password" type="password" required />
+          <Input
+            v-model.trim="passwords.password"
+            id="password"
+            type="password"
+            required
+            disabled
+          />
         </div>
 
         <div class="space-y-1">
@@ -43,15 +49,16 @@
             id="retype-password"
             type="password"
             required
+            disabled
           />
         </div>
       </div>
 
       <div class="ml-auto mt-8 flex gap-2">
-        <Button @click="navigateToSignIn" type="button" variant="secondary">
+        <Button @click="navigateToSignIn" type="button" variant="secondary" disabled>
           I already have an account
         </Button>
-        <Button type="submit"> Save and sign in </Button>
+        <Button type="submit" disabled> Save and sign in </Button>
       </div>
     </form>
   </section>
