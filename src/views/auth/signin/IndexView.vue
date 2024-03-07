@@ -1,53 +1,57 @@
 <template>
-  <section class="h-screen grid grid-cols-2">
-    <div class="flex items-center justify-end">
-      <div class="w-[30rem]">
-        <img src="@/assets/images/urs-logo.png" alt="URS Logo" class="h-20 mx-auto" />
-
-        <div class="text-center">
-          <p class="text-xl font-medium">
-            Proposed Features for <br />
-            Linear Regression Machine Learning Model of a
-          </p>
-          <h3 class="text-primary text-6xl font-bold uppercase">Smart Monitoring System</h3>
-          <h4 class="text-primary text-xl font-semibold uppercase">for Ayungin Fish Growth</h4>
-        </div>
+  <section class="h-screen pr-40 flex items-center justify-center gap-4">
+    <div class="text-right">
+      <div>
+        <p class="text-xl font-medium">
+          Proposed Features for <br />
+          Linear Regression Machine Learning Model of a
+        </p>
+        <h3 class="text-primary text-8xl font-bold uppercase">
+          Smart <br />
+          Monitoring <br />
+          System
+        </h3>
+        <h4 class="text-primary text-xl font-semibold uppercase">for Ayungin Fish Growth</h4>
       </div>
     </div>
 
-    <div class="grid place-items-center">
-      <form
-        @submit.prevent="handleFormSignIn"
-        class="border-neutral-300 bg-neutral-100 w-80 border rounded-lg p-8 grid gap-2"
-      >
-        <p class="text-xl text-center font-bold uppercase mb-4">Sign in to continue</p>
+    <form
+      @submit.prevent="handleFormSignIn"
+      class="border-neutral-300 bg-neutral-100 w-80 border rounded-lg p-8 grid gap-2 relative"
+    >
+      <img
+        src="@/assets/images/logo.png"
+        alt="URS Logo"
+        class="bg-neutral-100 h-36 mx-auto p-4 rounded-full absolute -top-[calc(30%_-_4.5rem)]"
+      />
 
-        <div class="space-y-1">
-          <Label for="email"> Email </Label>
-          <Input v-model.trim="form.email" type="email" id="email" required />
-        </div>
+      <p class="text-xl text-center font-bold uppercase mt-12 mb-4">Sign in to continue</p>
 
-        <div class="space-y-1">
-          <Label for="password"> Password </Label>
-          <Input
-            v-model.trim="form.password"
-            :type="isShowPassword ? 'text' : 'password'"
-            id="password"
-            required
-          />
-        </div>
+      <div class="space-y-1">
+        <Label for="email"> Email </Label>
+        <Input v-model.trim="form.email" type="email" id="email" required />
+      </div>
 
-        <div class="flex items-center gap-1">
-          <Checkbox @update:checked="isShowPassword = !isShowPassword" id="show-password" />
-          <Label for="show-password" class="text-xs"> Show password </Label>
-        </div>
+      <div class="space-y-1">
+        <Label for="password"> Password </Label>
+        <Input
+          v-model.trim="form.password"
+          :type="isShowPassword ? 'text' : 'password'"
+          id="password"
+          required
+        />
+      </div>
 
-        <Button type="submit" class="mt-8"> Sign in </Button>
-        <Button @click="navigateToSignUp" variant="link" class="w-min mx-auto">
-          Register new account
-        </Button>
-      </form>
-    </div>
+      <div class="flex items-center gap-1">
+        <Checkbox @update:checked="isShowPassword = !isShowPassword" id="show-password" />
+        <Label for="show-password" class="text-xs"> Show password </Label>
+      </div>
+
+      <Button type="submit" class="mt-8"> Sign in </Button>
+      <Button @click="navigateToSignUp" variant="link" class="w-min mx-auto">
+        Register new account
+      </Button>
+    </form>
   </section>
 
   <LoadingSpinner v-if="isShowLoading" />
@@ -80,45 +84,62 @@ function resetForm(): void {
 }
 
 async function handleFormSignIn(): Promise<void> {
-  isShowLoading.value = true;
+  resetForm();
 
-  if (form.email && form.password) {
-    const response: IResponse = await useSignIn(form.email, form.password);
+  toast({
+    title: "Server Error!",
+    description: "The website is currently on development!",
+    variant: "destructive",
+    duration: 1500,
+  });
 
-    if (response.data) {
-      isShowLoading.value = false;
+  // isShowLoading.value = true;
 
-      await router.push({ name: "home" });
+  // if (form.email && form.password) {
+  //   const response: IResponse = await useSignIn(form.email, form.password);
 
-      toast({
-        title: "Sign in successful!",
-        description: "Welcome back!",
-        duration: 1500,
-      });
-    } else {
-      isShowLoading.value = false;
+  //   if (response.data) {
+  //     isShowLoading.value = false;
 
-      toast({
-        title: "Sign in failed!",
-        description: "Invalid username and/or password!",
-        variant: "destructive",
-        duration: 1500,
-      });
-    }
-  } else {
-    isShowLoading.value = false;
+  //     await router.push({ name: "home" });
 
-    toast({
-      title: "Sign in failed!",
-      description: "Please input your email and password!",
-      variant: "destructive",
-      duration: 1500,
-    });
-  }
+  //     toast({
+  //       title: "Sign in successful!",
+  //       description: "Welcome back!",
+  //       duration: 1500,
+  //     });
+  //   } else {
+  //     isShowLoading.value = false;
+
+  //     toast({
+  //       title: "Sign in failed!",
+  //       description: "Invalid username and/or password!",
+  //       variant: "destructive",
+  //       duration: 1500,
+  //     });
+  //   }
+  // } else {
+  //   isShowLoading.value = false;
+
+  //   toast({
+  //     title: "Sign in failed!",
+  //     description: "Please input your email and password!",
+  //     variant: "destructive",
+  //     duration: 1500,
+  //   });
+  // }
 }
 
 async function navigateToSignUp(): Promise<void> {
   resetForm();
-  await router.push({ name: "signup" });
+
+  toast({
+    title: "Server Error!",
+    description: "The website is currently on development!",
+    variant: "destructive",
+    duration: 1500,
+  });
+
+  // await router.push({ name: "signup" });
 }
 </script>
