@@ -1,5 +1,7 @@
 <template>
-  <section class="h-screen pr-40 flex items-center justify-center gap-4">
+  <section
+    class="bg-[url('@/assets/images/background.png')] bg-cover bg-center bg-no-repeat h-screen pr-40 pt-16 flex items-center justify-center gap-4"
+  >
     <div class="text-right">
       <div>
         <p class="text-xl font-medium">
@@ -22,7 +24,7 @@
       <img
         src="@/assets/images/logo.png"
         alt="URS Logo"
-        class="bg-neutral-100 h-36 mx-auto p-4 rounded-full absolute -top-[calc(30%_-_4.5rem)]"
+        class="border-neutral-300 bg-neutral-100 h-36 mx-auto p-4 border-t-2 rounded-full absolute -top-[calc(30%_-_4.5rem)]"
       />
 
       <p class="text-xl text-center font-bold uppercase mt-12 mb-4">Sign in to continue</p>
@@ -48,7 +50,7 @@
         <Label for="show-password" class="text-xs"> Show password </Label>
       </div>
 
-      <Button type="submit" class="mt-8"> Sign in </Button>
+      <Button type="submit" class="mt-8" disabled> Sign in </Button>
       <Button @click="navigateToSignUp" variant="link" class="w-min mx-auto" disabled>
         Register new account
       </Button>
@@ -85,50 +87,41 @@ function resetForm(): void {
 }
 
 async function handleFormSignIn(): Promise<void> {
-  resetForm();
+  isShowLoading.value = true;
 
-  toast({
-    title: "Server Error!",
-    description: "The website is currently in development!",
-    variant: "destructive",
-    duration: 1500,
-  });
+  if (form.email && form.password) {
+    const response: IResponse = await useSignIn(form.email, form.password);
 
-  // isShowLoading.value = true;
+    if (response.data) {
+      isShowLoading.value = false;
 
-  // if (form.email && form.password) {
-  //   const response: IResponse = await useSignIn(form.email, form.password);
+      await router.push({ name: "home" });
 
-  //   if (response.data) {
-  //     isShowLoading.value = false;
+      toast({
+        title: "Sign in successful!",
+        description: "Welcome back!",
+        duration: 1500,
+      });
+    } else {
+      isShowLoading.value = false;
 
-  //     await router.push({ name: "home" });
+      toast({
+        title: "Sign in failed!",
+        description: "Invalid username and/or password!",
+        variant: "destructive",
+        duration: 1500,
+      });
+    }
+  } else {
+    isShowLoading.value = false;
 
-  //     toast({
-  //       title: "Sign in successful!",
-  //       description: "Welcome back!",
-  //       duration: 1500,
-  //     });
-  //   } else {
-  //     isShowLoading.value = false;
-
-  //     toast({
-  //       title: "Sign in failed!",
-  //       description: "Invalid username and/or password!",
-  //       variant: "destructive",
-  //       duration: 1500,
-  //     });
-  //   }
-  // } else {
-  //   isShowLoading.value = false;
-
-  //   toast({
-  //     title: "Sign in failed!",
-  //     description: "Please input your email and password!",
-  //     variant: "destructive",
-  //     duration: 1500,
-  //   });
-  // }
+    toast({
+      title: "Sign in failed!",
+      description: "Please input your email and password!",
+      variant: "destructive",
+      duration: 1500,
+    });
+  }
 }
 
 async function navigateToSignUp(): Promise<void> {

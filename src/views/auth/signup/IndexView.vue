@@ -1,5 +1,7 @@
 <template>
-  <section class="h-screen p-8 grid place-items-center">
+  <section
+    class="bg-[url('@/assets/images/background.png')] bg-cover bg-center bg-no-repeat h-screen p-8 grid place-items-center"
+  >
     <form
       @submit.prevent="handleFormSignUp"
       class="border-neutral-300 bg-neutral-100 min-w-[60%] max-w-[70rem] border rounded-lg p-8 grid gap-2"
