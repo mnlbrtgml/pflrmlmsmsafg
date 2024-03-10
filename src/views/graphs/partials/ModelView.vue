@@ -1,6 +1,8 @@
 <template>
   <div class="flex items-center justify-between">
-    <p class="font-semibold">Latest predicted weight: {{ predictions[predictions.length - 1] }}</p>
+    <p class="font-semibold">
+      Latest predicted weight: {{ predictions[predictions.length - 1].weight }}
+    </p>
 
     <Button @click="getPredictions" class="w-max ml-auto">Refresh</Button>
   </div>
@@ -8,7 +10,7 @@
   <div v-if="predictions" class="flex-1 grid grid-cols-2 gap-4">
     <ul class="max-h-[29rem] overflow-y-auto">
       <li v-for="(prediction, index) in predictions" :key="index" class="px-4 py-2">
-        Prediction #{{ index + 1 }}: {{ prediction }}
+        Prediction #{{ prediction.count }}: {{ prediction.weight }}
       </li>
     </ul>
 
@@ -35,22 +37,32 @@ import {
 import Button from "@/components/ui/button/Button.vue";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+
+const predictions = ref([{ count: 0, weight: 1000 }]);
 const chartOptions = { responsive: true };
-const predictions = ref<number[]>([0]);
 const chartData = reactive({
-  labels: [0, 50, 100, 150, 200, 250, 300, 350, 400],
-  datasets: [{ data: [...predictions.value], label: "Predicted Weight" }],
+  labels: [1000],
+  datasets: [{ label: "Predicted Weight", data: [0] }],
 });
 
 async function getPredictions(): Promise<void> {
   const predictionCollection = await getDocs(collection(db, "predictions"));
 
   if (predictionCollection) {
-    predictions.value = [0];
+    predictions.value = [{ count: 0, weight: 1000 }];
+
+    const tempList: { count: number; weight: number }[] = [];
 
     predictionCollection.forEach((document) => {
-      predictions.value.push(document.data()["predicted_weight"]);
+      tempList.push({
+        count: Number(document.id.slice(document.id.lastIndexOf("_") + 1)),
+        weight: document.data()["predicted_weight"],
+      });
     });
+
+    predictions.value = tempList.sort((a, b) => a.count - b.count);
+    chartData.labels = predictions.value.map((prediction) => prediction.count);
+    chartData.datasets[0].data = predictions.value.map((prediction) => prediction.weight);
   }
 }
 
