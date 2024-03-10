@@ -4,4 +4,13 @@ enum Role {
   viewer = "viewer",
 }
 
-export { Role };
+enum Variant {
+  default = "default",
+  link = "link",
+  destructive = "destructive",
+  outline = "outline",
+  secondary = "secondary",
+  ghost = "ghost",
+}
+
+export { Role, Variant };

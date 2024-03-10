@@ -31,7 +31,7 @@
 
       <div class="space-y-1">
         <Label for="email"> Email </Label>
-        <Input v-model.trim="form.email" type="email" id="email" required disabled />
+        <Input v-model.trim="form.email" type="email" id="email" required />
       </div>
 
       <div class="space-y-1">
@@ -41,17 +41,16 @@
           :type="isShowPassword ? 'text' : 'password'"
           id="password"
           required
-          disabled
         />
       </div>
 
       <div class="flex items-center gap-1">
-        <Checkbox @update:checked="isShowPassword = !isShowPassword" id="show-password" disabled />
+        <Checkbox @update:checked="isShowPassword = !isShowPassword" id="show-password" />
         <Label for="show-password" class="text-xs"> Show password </Label>
       </div>
 
-      <Button type="submit" class="mt-8" disabled> Sign in </Button>
-      <Button @click="navigateToSignUp" variant="link" class="w-min mx-auto" disabled>
+      <Button type="submit" class="mt-8"> Sign in </Button>
+      <Button @click="navigateToSignUp" variant="link" class="w-min mx-auto">
         Register new account
       </Button>
     </form>
@@ -62,6 +61,7 @@
 
 <script lang="ts" setup>
 import type { ISignInForm, IResponse } from "@/assets/ts/interfaces";
+import type { PropsToast } from "@/assets/ts/types";
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { Label } from "@/components/ui/label";
@@ -73,9 +73,16 @@ import useSignIn from "@/firebase/auth/signin";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 const { toast } = useToast();
+
 const router = useRouter();
 const isShowLoading = ref<boolean>(false);
 const isShowPassword = ref<boolean>(false);
+const toastProperties = reactive<PropsToast>({
+  title: undefined,
+  description: undefined,
+  variant: undefined,
+  duration: 1500,
+});
 const form = reactive<ISignInForm>({
   email: "",
   password: "",
@@ -97,31 +104,23 @@ async function handleFormSignIn(): Promise<void> {
 
       await router.push({ name: "home" });
 
-      toast({
-        title: "Sign in successful!",
-        description: "Welcome back!",
-        duration: 1500,
-      });
+      toastProperties.title = "Sign in successful!";
+      toastProperties.description = "Welcome back!";
+      toastProperties.variant = "default";
     } else {
       isShowLoading.value = false;
-
-      toast({
-        title: "Sign in failed!",
-        description: "Invalid username and/or password!",
-        variant: "destructive",
-        duration: 1500,
-      });
+      toastProperties.title = "Sign in failed!";
+      toastProperties.description = "Invalid username and/or password!";
+      toastProperties.variant = "destructive";
     }
   } else {
     isShowLoading.value = false;
-
-    toast({
-      title: "Sign in failed!",
-      description: "Please input your email and password!",
-      variant: "destructive",
-      duration: 1500,
-    });
+    toastProperties.title = "Sign in failed!";
+    toastProperties.description = "Please input your email and password!";
+    toastProperties.variant = "destructive";
   }
+
+  toast({ ...toastProperties });
 }
 
 async function navigateToSignUp(): Promise<void> {
