@@ -70,6 +70,15 @@ import {
 } from "chart.js";
 import Button from "@/components/ui/button/Button.vue";
 import { format } from "date-fns";
+
+interface Prediction {
+  timestamp: firebase.firestore.Timestamp;
+  TemperatureValue: number;
+  TurbidityValue: number;
+  pHValue: number;
+  predicted_weight: number;
+}
+
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 const predictions = ref([]);
@@ -103,7 +112,7 @@ const turbidityChartData = reactive(createChartData('Turbidity (NTU)', 'rgba(210
 const phChartData = reactive(createChartData('pH Level', 'rgba(255, 206, 86, 0.5)'));
 const predictedWeightChartData = reactive(createChartData('Predicted Weight (g)', 'rgba(75, 192, 192, 0.5)'));
 
-function createChartData(label, backgroundColor) {
+function createChartData(label: string, backgroundColor: string) {
   return {
     labels: [],
     datasets: [{
@@ -114,21 +123,22 @@ function createChartData(label, backgroundColor) {
   };
 }
 
-async function getPredictions() {
+async function getPredictions(): Promise<void> {
   const predictionsQuery = query(collection(db, "predictions"), orderBy("timestamp"));
   const predictionCollection = await getDocs(predictionsQuery);
 
   if (predictionCollection) {
-    const tempList = [];
-    let timestamps = [];
+    const tempList: Prediction[] =[];
+    let timestamps: firebase.firestore.Timestamp[] = [];
 
     predictionCollection.forEach((doc) => {
-      const data = doc.data();
+      const data = doc.data() as Prediction;
       tempList.push(data);
       timestamps.push(data.timestamp);
     });
 
     predictions.value = tempList;
+
   timestamps = predictions.value.map(p => format(new Date(p.timestamp), 'HH:mm'));
     updateChartData(temperatureChartData, timestamps, tempList.map(t => t.TemperatureValue));
     updateChartData(turbidityChartData, timestamps, tempList.map(t => t.TurbidityValue));
@@ -137,7 +147,7 @@ async function getPredictions() {
   }
 }
 
-function updateChartData(chartData, labels, data) {
+function updateChartData(chartData: ChartData, labels: string[], data: number[]): void {
   chartData.labels = labels;
   chartData.datasets[0].data = data;
 }
