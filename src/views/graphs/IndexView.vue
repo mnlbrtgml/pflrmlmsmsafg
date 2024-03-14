@@ -6,7 +6,7 @@
       <span
         class="bg-primary text-primary-foreground px-4 py-2 font-bold text-xs uppercase rounded-t-lg absolute left-4 -top-8 z-50"
       >
-        Graph results
+        Predictions results
       </span>
 
       <Suspense>
