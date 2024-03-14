@@ -22,8 +22,8 @@ const router = createRouter({
       component: ParametersView,
     },
     {
-      path: "/graphs",
-      name: "graphs",
+      path: "/predictions",
+      name: "predictions",
       meta: { requiresAuth: true },
       component: GraphsView,
     },
