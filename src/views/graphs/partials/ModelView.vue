@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-4">
     <div class="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-md">
       <p class="font-semibold text-lg">
-        Latest predicted weight: {{ predictions[predictions.length - 1]?.predicted_weight }} kg
+        Latest predicted weight: {{ predictions[predictions.length - 1]?.predicted_weight }} g
       </p>
       
       <Button @click="getPredictions" class="w-max bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Refresh</Button>
@@ -54,10 +54,10 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent, onMounted, ref, reactive } from 'vue';
 import { db } from "@/firebase/config";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { ref, reactive } from "vue";
 import { Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -70,79 +70,101 @@ import {
 } from "chart.js";
 import Button from "@/components/ui/button/Button.vue";
 import { format } from "date-fns";
+import type { ChartOptions } from 'chart.js';
+
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
-const predictions = ref([]);
-const chartOptions = reactive({
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    tooltip: {
-      mode: 'index',
-      intersect: false,
-    },
+export default defineComponent({
+  components: {
+    Bar,
+    Button
   },
-  scales: {
-    x: {
-      grid: {
-        display: false,
+  setup() {
+    const predictions = ref<any[]>([]);
+    const chartOptions : ChartOptions<'bar'> = reactive({
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+        },
       },
-    },
-    y: {
-      grid: {
-        color: 'rgba(240, 240, 240, 1)',
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+        },
+        y: {
+          grid: {
+            color: 'rgba(240, 240, 240, 1)',
+          },
+        },
       },
-    },
-  },
-});
-
-const temperatureChartData = reactive(createChartData('Temperature (°C)', 'rgba(255, 99, 132, 0.5)'));
-const turbidityChartData = reactive(createChartData('Turbidity (NTU)', 'rgba(210, 162, 235, 0.5)'));
-const phChartData = reactive(createChartData('pH Level', 'rgba(255, 206, 86, 0.5)'));
-const predictedWeightChartData = reactive(createChartData('Predicted Weight (g)', 'rgba(75, 192, 192, 0.5)'));
-
-function createChartData(label, backgroundColor) {
-  return {
-    labels: [],
-    datasets: [{
-      label,
-      data: [],
-      backgroundColor: backgroundColor,
-    }],
-  };
-}
-
-async function getPredictions() {
-  const predictionsQuery = query(collection(db, "predictions"), orderBy("timestamp"));
-  const predictionCollection = await getDocs(predictionsQuery);
-
-  if (predictionCollection) {
-    const tempList = [];
-    let timestamps = [];
-
-    predictionCollection.forEach((doc) => {
-      const data = doc.data();
-      tempList.push(data);
-      timestamps.push(data.timestamp);
     });
 
-    predictions.value = tempList;
-  timestamps = predictions.value.map(p => format(new Date(p.timestamp), 'HH:mm'));
-    updateChartData(temperatureChartData, timestamps, tempList.map(t => t.TemperatureValue));
-    updateChartData(turbidityChartData, timestamps, tempList.map(t => t.TurbidityValue));
-    updateChartData(phChartData, timestamps, tempList.map(t => t.pHValue));
-    updateChartData(predictedWeightChartData, timestamps, tempList.map(t => t.predicted_weight));
-  }
-}
+    const temperatureChartData = reactive(createChartData('Temperature (°C)', 'rgba(255, 99, 132, 0.5)'));
+    const turbidityChartData = reactive(createChartData('Turbidity (NTU)', 'rgba(210, 162, 235, 0.5)'));
+    const phChartData = reactive(createChartData('pH Level', 'rgba(255, 206, 86, 0.5)'));
+    const predictedWeightChartData = reactive(createChartData('Predicted Weight (g)', 'rgba(75, 192, 192, 0.5)'));
 
-function updateChartData(chartData, labels, data) {
-  chartData.labels = labels;
-  chartData.datasets[0].data = data;
-}
+    function createChartData(label: string, backgroundColor: string) {
+      return {
+        labels: [],
+        datasets: [{
+          label,
+          data: [],
+          backgroundColor: backgroundColor,
+        }],
+      };
+    }
 
-await getPredictions();
+    async function getPredictions() {
+      const predictionsQuery = query(collection(db, "predictions"), orderBy("timestamp"));
+      const predictionCollection = await getDocs(predictionsQuery);
+
+      if (predictionCollection) {
+        const tempList: any[] = [];
+        let timestamps: string[] = [];
+
+        predictionCollection.forEach((doc) => {
+          const data = doc.data();
+          tempList.push(data);
+          timestamps.push(data.timestamp);
+        });
+
+        predictions.value = tempList;
+        timestamps = predictions.value.map(p => format(new Date(p.timestamp), 'HH:mm'));
+        updateChartData(temperatureChartData, timestamps, tempList.map(t => t.TemperatureValue));
+        updateChartData(turbidityChartData, timestamps, tempList.map(t => t.TurbidityValue));
+        updateChartData(phChartData, timestamps, tempList.map(t => t.pHValue));
+        updateChartData(predictedWeightChartData, timestamps, tempList.map(t => t.predicted_weight));
+      }
+    }
+
+    function updateChartData(chartData: any, labels: string[], data: number[]) {
+      chartData.labels = labels;
+      chartData.datasets[0].data = data;
+    }
+
+    onMounted(async () => {
+      await getPredictions();
+    });
+
+    return {
+      predictions,
+      chartOptions,
+      temperatureChartData,
+      turbidityChartData,
+      phChartData,
+      predictedWeightChartData,
+      getPredictions,
+    };
+  },
+});
 </script>
 
 <style scoped>
