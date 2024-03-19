@@ -9,7 +9,7 @@
         Parameter values
       </span>
 
-      <Button @click="handleFeedingToggling" class="w-max ml-auto">Toggle feeding time</Button>
+      <Button @click="handleFeedingToggling" class="w-max ml-auto">Feeding System: {{ sensorValues.FeedingTime }}</Button>
 
       <div class="flex-1 grid grid-cols-2 gap-2">
         <div
