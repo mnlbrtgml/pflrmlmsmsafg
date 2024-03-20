@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-md">
       <p class="font-semibold text-lg">
         Latest predicted weight:
-        {{ predictions && predictions[predictions.length - 1]?.predicted_weight }} kg
+        {{ predictions && predictions[predictions.length - 1]?.predicted_weight }} g
       </p>
 
       <Button
