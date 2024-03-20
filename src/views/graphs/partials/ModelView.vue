@@ -2,7 +2,8 @@
   <div class="flex flex-col gap-4">
     <div class="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-md">
       <p class="font-semibold text-lg">
-        Latest predicted weight: {{ predictions && predictions[predictions.length - 1]?.predicted_weight }} kg
+        Latest predicted weight:
+        {{ predictions && predictions[predictions.length - 1]?.predicted_weight }} kg
       </p>
 
       <Button
@@ -73,7 +74,7 @@ import {
   BarElement,
   CategoryScale,
   LinearScale,
-  type ChartData
+  type ChartData,
 } from "chart.js";
 import Button from "@/components/ui/button/Button.vue";
 import { format } from "date-fns";
@@ -153,7 +154,7 @@ async function getPredictions(): Promise<void> {
     predictions.value = tempList;
 
     timestamps = predictions.value.map((p) => format(new Date(p.timestamp.toString()), "HH:mm"));
-    
+
     updateChartData(
       temperatureChartData,
       timestamps,

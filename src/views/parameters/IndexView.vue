@@ -9,13 +9,13 @@
         Parameter values
       </span>
 
-      <Button @click="handleFeedingToggling" class="w-max ml-auto">Feeding System: {{ sensorValues.FeedingTime }}</Button>
+      <Button @click="handleFeedingToggling" class="w-max ml-auto">Toggle feeding system</Button>
 
       <div class="flex-1 grid grid-cols-2 gap-2">
         <div
           class="border-sky-300 bg-sky-100 text-sky-600 p-4 border rounded-lg flex flex-col items-center justify-center gap-4"
         >
-          <p class="text-xl font-bold uppercase">Feeding Time</p>
+          <p class="text-xl font-bold uppercase">Feeding System</p>
           <p class="bg-sky-600 text-primary-foreground px-4 py-2 text-4xl rounded-lg">
             {{ sensorValues.FeedingTime }}
           </p>
