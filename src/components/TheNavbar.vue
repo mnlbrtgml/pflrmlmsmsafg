@@ -4,8 +4,8 @@
       <RouterLink :to="{ name: links[0] }" class="flex items-center gap-2">
         <img src="@/assets/images/logo.png" alt="SMS Icon" class="size-12" />
         <h1 class="text-primary font-bold uppercase grid">
-          <span class="text-xl">Smart Monitoring System</span>
-          <span class="-mt-2 text-xs">for Ayungin Fish Growth</span>
+          <span>Multiple Linear Regression Machine Learning Model </span>
+          <span class="-mt-1 text-xs">of a Smart Monitoring System for Ayungin Fish Growth</span>
         </h1>
       </RouterLink>
 

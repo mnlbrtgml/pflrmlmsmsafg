@@ -63,7 +63,7 @@
 
 <script lang="ts" setup>
 import { db } from "@/firebase/config";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, where, deleteDoc, doc } from "firebase/firestore";
 import { ref, reactive } from "vue";
 import { Bar } from "vue-chartjs";
 import {

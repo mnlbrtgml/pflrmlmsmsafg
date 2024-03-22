@@ -5,8 +5,8 @@
     <div class="text-right">
       <div>
         <p class="text-xl font-medium">
-          Proposed Features for <br />
-          Linear Regression Machine Learning Model of a
+          Multiple Linear Regression <br />
+          Machine Learning Model of a
         </p>
         <h3 class="text-primary text-8xl font-bold uppercase">
           Smart <br />
@@ -27,7 +27,10 @@
         class="border-neutral-300 bg-neutral-100 h-36 mx-auto p-4 border-t-2 rounded-full absolute -top-[calc(30%_-_4.5rem)]"
       />
 
-      <p class="text-xl text-center font-bold uppercase mt-12 mb-4">Sign in to continue</p>
+      <div class="mt-12 mb-4 text-center font-bold">
+        <p class="text-primary">MLRMLM SMS AFG</p>
+        <p class="text-xl uppercase">Sign in to continue</p>
+      </div>
 
       <div class="space-y-1">
         <Label for="email"> Email </Label>

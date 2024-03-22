@@ -9,7 +9,9 @@
         Parameter values
       </span>
 
-      <Button @click="handleFeedingToggling" class="w-max ml-auto">Feeding System Activation</Button>
+      <Button @click="handleFeedingToggling" class="w-max mr-auto"
+        >Feeding System Activation</Button
+      >
 
       <div class="flex-1 grid grid-cols-2 gap-2">
         <div
